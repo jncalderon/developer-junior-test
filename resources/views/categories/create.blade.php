@@ -1,0 +1,2 @@
+@extends('layouts.app') @section('content')<h1>Nueva categoría</h1>
+<form method="POST" action="{{ route('categories.store') }}">@csrf <div class="field"><label>Nombre</label><input name="name" required></div><button class="btn">Guardar</button></form>@endsection
