@@ -9,6 +9,7 @@
     <thead>
         <tr>
             <th>Producto</th>
+            <th>Stock</th>
             <th>Categoría</th>
             <th>Precio</th>
             <th>Estado</th>
@@ -18,6 +19,7 @@
     <tbody>
         @forelse($products as $product)<tr>
             <td><strong>{{ $product->name }}</strong><br><span class="muted">{{ $product->sku }}</span></td>
+            <td>{{ $product->stock }}</td>
             <td>{{ $product->category->name }}</td>
             <td>${{ number_format((float)$product->price,2) }}</td>
             <td>{{ $product->active ? 'Activo' : 'Inactivo' }}</td>
