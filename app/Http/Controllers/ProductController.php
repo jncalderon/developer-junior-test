@@ -8,10 +8,33 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    /**
+     * Lista los productos y permite filtrarlos por nombre o SKU.
+     *
+     * El término se recibe por GET en el parámetro "q". Por compatibilidad con
+     * las integraciones de inventario, que exponen el identificador como "code",
+     * ese parámetro también se acepta como alias de "q".
+     *
+     * La búsqueda es parcial (LIKE %término%) sobre las columnas "name" y "sku".
+     * Si el término está vacío o solo tiene espacios, no se filtra y se
+     * muestran todos los productos.
+     */
+    public function index(Request $request)
     {
-        $products = Product::with('category')->orderBy('name')->get();
-        return view('products.index', compact('products'));
+        $search = trim((string) $request->input('q', $request->input('code', '')));
+
+        $products = Product::with('category')
+        
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('sku', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('name')
+            ->get();
+
+        return view('products.index', compact('products', 'search'));
     }
     public function create()
     {
