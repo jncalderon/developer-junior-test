@@ -4,7 +4,19 @@
         <h1>Productos</h1>
         <p class="muted">Inventario de ejemplo para la prueba técnica.</p>
     </div><a class="btn" href="{{ route('products.create') }}">Nuevo producto</a>
+    
 </div>
+<div>
+        <form method="GET" action="{{ route('products.index') }}">
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Buscar por nombre o SKU"
+            >
+            <button class="btn" type="submit">Buscar</button>
+        </form>
+    </div>
 <table>
     <thead>
         <tr>
