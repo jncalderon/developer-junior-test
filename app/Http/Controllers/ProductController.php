@@ -52,7 +52,7 @@ class ProductController extends Controller
             'active' => ['nullable', 'boolean'],
         ]);
         $data['active'] = $request->boolean('active');
-        $data['category_id'] = $product->category_id;
+        $data['category_id'] = $request->category_id;
         $product->update($data);
         return redirect()->route('products.index')->with('ok', 'Producto actualizado.');
     }
