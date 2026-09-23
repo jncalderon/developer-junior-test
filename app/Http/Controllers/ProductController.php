@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -24,7 +25,7 @@ class ProductController extends Controller
         $search = trim((string) $request->input('q', $request->input('code', '')));
 
         $products = Product::with('category')
-        
+
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%")
@@ -32,10 +33,13 @@ class ProductController extends Controller
                 });
             })
             ->orderBy('name')
-            ->get();
+            ->paginate(5);
+    
 
         return view('products.index', compact('products', 'search'));
     }
+
+    
     public function create()
     {
         return view('products.create', ['categories' => Category::orderBy('name')->get()]);
@@ -45,7 +49,7 @@ class ProductController extends Controller
         $data = $request->validate([
             'category_id' => ['required', 'exists:categories,id'],
             'name' => ['required', 'max:120'],
-            'sku' => ['required', 'max:40'],
+            'sku' => ['required','unique:products,sku', 'max:40'],
             'stock' => ['required', 'integer', 'min:0'],
             'location' => ['nullable', 'max:80'],
             'price' => ['required', 'numeric', 'min:0'],
@@ -68,7 +72,7 @@ class ProductController extends Controller
         $data = $request->validate([
             'category_id' => ['required', 'exists:categories,id'],
             'name' => ['required', 'max:120'],
-            'sku' => ['required', 'max:40'],
+            'sku' => ['required', Rule::unique('products', 'sku')->ignore($product->id), 'max:40'],
             'stock' => ['required', 'integer', 'min:0'],
             'location' => ['nullable', 'max:80'],
             'price' => ['required', 'numeric', 'min:0'],
