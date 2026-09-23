@@ -12,6 +12,7 @@
             <th>Categoría</th>
             <th>Precio</th>
             <th>Estado</th>
+            <th>Stock</th>
             <th></th>
         </tr>
     </thead>
@@ -21,6 +22,7 @@
             <td>{{ $product->category->name }}</td>
             <td>${{ number_format((float)$product->price,2) }}</td>
             <td>{{ $product->active ? 'Activo' : 'Inactivo' }}</td>
+            <td>{{ $product->stock }}</td>
             <td><a href="{{ route('products.edit',$product) }}">Editar</a></td>
         </tr>@empty<tr>
             <td colspan="5">Sin productos.</td>
